@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SIP Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .calculator {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .calculator h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 48%;
+      padding: 10px;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .calculate-btn {
+      background-color: #4caf50;
+    }
+
+    .reset-btn {
+      background-color: #f44336;
+    }
+
+    .output {
+      margin-top: 20px;
+      font-size: 1.1em;
+      background-color: #e0f7fa;
+      padding: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2>SIP Calculator</h2>
+    <label for="monthlyInvestment">Monthly Investment (₹)</label>
+    <input type="number" id="monthlyInvestment" placeholder="e.g. 5000" />
+
+    <label for="years">Investment Period (Years)</label>
+    <input type="number" id="years" placeholder="e.g. 10" />
+
+    <label for="interestRate">Expected Annual Return (%)</label>
+    <input type="number" id="interestRate" placeholder="e.g. 12" />
+
+    <div class="btn-group">
+      <button class="calculate-btn" onclick="calculateSIP()">Calculate</button>
+      <button class="reset-btn" onclick="resetFields()">Reset</button>
+    </div>
+
+    <div class="output" id="output"></div>
+  </div>
+
+  <script>
+    function calculateSIP() {
+      const monthlyInvestment = parseFloat(document.getElementById("monthlyInvestment").value);
+      const years = parseFloat(document.getElementById("years").value);
+      const annualRate = parseFloat(document.getElementById("interestRate").value);
+
+      if (isNaN(monthlyInvestment) || isNaN(years) || isNaN(annualRate)) {
+        document.getElementById("output").innerHTML = "Please fill all fields with valid numbers.";
+        return;
+      }
+
+      const months = years * 12;
+      const monthlyRate = annualRate / 12 / 100;
+
+      let futureValue = monthlyInvestment * (((Math.pow(1 + monthlyRate, months)) - 1) * (1 + monthlyRate)) / monthlyRate;
+      let investedAmount = monthlyInvestment * months;
+
+      document.getElementById("output").innerHTML = `
+        <strong>Future Value:</strong> ₹${futureValue.toFixed(2).toLocaleString()}<br>
+        <strong>Total Invested:</strong> ₹${investedAmount.toFixed(2).toLocaleString()}<br>
+        <strong>Wealth Gained:</strong> ₹${(futureValue - investedAmount).toFixed(2).toLocaleString()}
+      `;
+    }
+
+    function resetFields() {
+      document.getElementById("monthlyInvestment").value = "";
+      document.getElementById("years").value = "";
+      document.getElementById("interestRate").value = "";
+      document.getElementById("output").innerHTML = "";
+    }
+  </script>
+</body>
+</html>
